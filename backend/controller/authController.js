@@ -126,7 +126,7 @@ const signup = async (req, res) => {
         const user = await User.create({ 
             name, 
             email, 
-            password: hashedPassword,
+            password,
             image: `https://api.dicebear.com/5.x/initials/svg?seed=${name}`,
         });
         

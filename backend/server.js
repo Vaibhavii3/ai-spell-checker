@@ -4,8 +4,9 @@ const bodyParser = require("body-parser");
 const axios = require("axios");
 require("dotenv").config(); 
 
-const authRoutes = require("./src/routes/auth");
-const connectDB = require("../thinkspace-backend/src/config/db");
+const authRoutes = require("./router/auth.js")
+const aiRoutes = require("./router/aiRoutes");
+const connectDB = require("./config/db.js");
 
 const app = express();
 
@@ -19,8 +20,8 @@ app.use(bodyParser.json());
 
 
 // Routes    
-
 app.use("/api/v1/auth", authRoutes);
+app.use("/api/v1/spell", aiRoutes);
 
 app.use((req, res) => {
     res.status(404).json({ message: "Route not found" });
