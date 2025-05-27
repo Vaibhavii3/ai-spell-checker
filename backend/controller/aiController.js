@@ -5,10 +5,13 @@ const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 const GEMINI_URL = process.env.GEMINI_URL;
 
 exports.processText = async (req, res) => {
-  const { text, mode, tone } = req.body;
+  const { text, mode, tone, goalType } = req.body;
 
   try {
-    const prompt = buildPrompt(text, mode, tone);
+
+    const prompt = mode === "goal"
+      ? buildGoalPrompt(goalType, text, tone)
+      : buildPrompt(text, mode, tone);
 
     const response = await axios.post(
         `${GEMINI_URL}?key=${GEMINI_API_KEY}`,
@@ -43,7 +46,24 @@ function buildPrompt(text, mode, tone = "default") {
       return `Rewrite the following text in a ${tone} tone:\n\n"${text}"`;
     case "vocabulary":
       return `Enhance the vocabulary in this text using more sophisticated words:\n\n"${text}"`;
+    case "goal":
+      return  buildGoalPrompt(goalType, text, tone);
     default:
       return `Improve the overall quality of this writing:\n\n"${text}"`;
+  }
+}
+
+function buildGoalPrompt(goal, topic, tone = "default") {
+  switch (goal) {
+    case "email":
+      return `Write a ${tone} professional email based on this topic:\n"${topic}"\nInclude greeting, body, and signature,`;
+    case "essay":
+      return `Write a well-structured ${tone} essay on:\n"${topic}"\nInclude an introducation, body, and conclusion,`;
+    case "story":
+      return `Write a short ${tone} story based on this idea:\n"${topic}"\nUse creative and engaging language.`;
+    case "resume":
+      return `Help create resume content for:\n"${topic}"\nRespond in resume-style bullet points, using a ${tone} tone.`;
+    default:
+      return `Generate text based on:\n"${topic}"`;
   }
 }
