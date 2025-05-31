@@ -236,11 +236,6 @@ const TextProcessor = () => {
         },
       );
 
-      // if (!response.ok) {
-      //   throw new Error('Failed to process text');
-      // }
-
-      // const data = await response.json();
       setResult(response.data.result || 'No result received');
     } catch (err) {
       setError( err.response?.data?.error || err.message || 'An error occurred while processing');
@@ -271,53 +266,73 @@ const TextProcessor = () => {
         <p style={styles.headerSubtitle}>Improve your writing with AI assistance</p>
       </header>
 
+
       <div style={styles.container}>
         <div style={styles.controls}>
           <div style={styles.controlGroup}>
-            <label htmlFor="mode" style={styles.label}>Processing Mode:</label>
-            <select 
-              id="mode"
-              value={mode} 
-              onChange={(e) => setMode(e.target.value)}
-              style={styles.select}
-            >
-              {modes.map(m => (
-                <option key={m.value} value={m.value}>{m.label}</option>
-              ))}
-            </select>
-          </div>
+<div style={styles.controlGroup}>
+  <label style={styles.label}>Processing Mode:</label>
+  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+    {modes.map(m => (
+      <button
+        key={m.value}
+        onClick={() => setMode(m.value)}
+        style={{
+          ...styles.btnSmall,
+          backgroundColor: mode === m.value ? '#4f46e5' : '#e5e7eb',
+          color: mode === m.value ? 'white' : '#111827'
+        }}
+      >
+        {m.label}
+      </button>
+    ))}
+  </div>
+</div>
 
-          {mode === 'tone' && (
-            <div style={styles.controlGroup}>
-              <label htmlFor="tone" style={styles.label}>Tone:</label>
-              <select 
-                id="tone"
-                value={tone} 
-                onChange={(e) => setTone(e.target.value)}
-                style={styles.select}
-              >
-                {tones.map(t => (
-                  <option key={t.value} value={t.value}>{t.label}</option>
-                ))}
-              </select>
-            </div>
-          )}
+{mode === 'tone' && (
+  <div style={styles.controlGroup}>
+    <label style={styles.label}>Tone:</label>
+    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+      {tones.map(t => (
+        <button
+          key={t.value}
+          onClick={() => setTone(t.value)}
+          style={{
+            ...styles.btnSmall,
+            backgroundColor: tone === t.value ? '#4f46e5' : '#e5e7eb',
+            color: tone === t.value ? 'white' : '#111827'
+          }}
+        >
+          {t.label}
+        </button>
+      ))}
+    </div>
+  </div>
+)}
 
-          {mode === 'goal' && (
-            <div style={styles.controlGroup}>
-              <label htmlFor="goal" style={styles.label}>Writing Goal:</label>
-              <select 
-                id="goal"
-                value={goal} 
-                onChange={(e) => setGoal(e.target.value)}
-                style={styles.select}
-              >
-              {goals.map(g => (
-                <option key={g.value} value={g.value}>{g.label}</option>
-              ))}
-              </select>
+
+{mode === 'goal' && (
+  <div style={styles.controlGroup}>
+    <label style={styles.label}>Writing Goal:</label>
+    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+      {goals.map(g => (
+        <button
+          key={g.value}
+          onClick={() => setGoal(g.value)}
+          style={{
+            ...styles.btnSmall,
+            backgroundColor: goal === g.value ? '#4f46e5' : '#e5e7eb',
+            color: goal === g.value ? 'white' : '#111827'
+          }}
+        >
+          {g.label}
+        </button>
+      ))}
+    </div>
+  </div>
+)}
+
             </div>
-          )}
 
 
           <div style={styles.buttonGroup}>

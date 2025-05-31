@@ -44,34 +44,7 @@ const Homepage = () => {
     }
   ];
 
-  const testimonials = [
-    {
-      name: "Sarah Johnson",
-      role: "Content Writer",
-      text: "This tool has revolutionized my writing process. The AI suggestions are incredibly accurate and helpful.",
-      avatar: "👩‍💼"
-    },
-    {
-      name: "Michael Chen",
-      role: "Student",
-      text: "Perfect for academic writing. It helps me express my ideas more clearly and professionally.",
-      avatar: "👨‍🎓"
-    },
-    {
-      name: "Emma Davis",
-      role: "Marketing Manager",
-      text: "The tone adjustment feature is amazing. I can easily adapt my content for different audiences.",
-      avatar: "👩‍💻"
-    }
-  ];
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentFeature((prev) => (prev + 1) % features.length);
-    }, 3000);
-    return () => clearInterval(interval);
-  }, []);
-
+  
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -387,6 +360,10 @@ const Homepage = () => {
     footerText: {
       opacity: 0.7,
       fontSize: '0.9rem'
+    },
+    link: {
+      textDecoration: 'none',
+      color: 'white',
     }
   };
 
@@ -447,7 +424,7 @@ const Homepage = () => {
                   e.target.style.transform = 'translateY(0)';
                 }}
               >
-                <Link to="/login">
+                <Link to="/login" style={styles.link}>
                 Try It Free Now
                 </Link>
               </button>
@@ -536,38 +513,6 @@ const Homepage = () => {
           </div>
         </section>
 
-        {/* Testimonials Section */}
-        <section id="testimonials" style={styles.testimonials}>
-          <div style={styles.container}>
-            <h2 style={styles.sectionTitle}>What Our Users Say</h2>
-            <p style={styles.sectionSubtitle}>
-              Join thousands of satisfied users who have improved their writing
-            </p>
-            <div style={styles.testimonialsGrid}>
-              {testimonials.map((testimonial, index) => (
-                <div
-                  key={index}
-                  style={{
-                    ...styles.testimonialCard,
-                    transform: isVisible.testimonials ? 'translateY(0)' : 'translateY(30px)',
-                    opacity: isVisible.testimonials ? 1 : 0,
-                    transition: `all 0.6s ease ${index * 0.2}s`
-                  }}
-                >
-                  <p style={styles.testimonialText}>"{testimonial.text}"</p>
-                  <div style={styles.testimonialAuthor}>
-                    <span style={styles.testimonialAvatar}>{testimonial.avatar}</span>
-                    <div style={styles.testimonialInfo}>
-                      <div style={styles.testimonialName}>{testimonial.name}</div>
-                      <div style={styles.testimonialRole}>{testimonial.role}</div>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
         {/* Call to Action Section */}
         <section style={styles.cta}>
           <div style={styles.container}>
@@ -610,7 +555,7 @@ const Homepage = () => {
         <footer style={styles.footer}>
           <div style={styles.container}>
             <p style={styles.footerText}>
-              © 2025 Text Processor. Powered by AI. Built with care.
+              © 2025 Text Processor. Built with care.
             </p>
           </div>
         </footer>
