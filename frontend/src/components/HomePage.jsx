@@ -450,14 +450,6 @@ const Homepage = () => {
                     transition: `all 0.6s ease ${index * 0.1}s`,
                     borderTop: `4px solid ${feature.color}`
                   }}
-                  onMouseEnter={(e) => {
-                    e.target.style.transform = 'translateY(-10px)';
-                    e.target.style.boxShadow = '0 20px 40px rgba(0, 0, 0, 0.15)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.style.transform = 'translateY(0)';
-                    e.target.style.boxShadow = '0 10px 30px rgba(0, 0, 0, 0.1)';
-                  }}
                 >
                   <span style={styles.featureIcon}>{feature.icon}</span>
                   <h3 style={styles.featureTitle}>{feature.title}</h3>
