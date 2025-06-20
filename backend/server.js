@@ -16,7 +16,7 @@ connectDB();
 
 // Middleware
 app.use(cors({
-    origin: 'https:// ',
+    origin: 'https://ai-spell-checker-three.vercel.app/ ',
     credentials: true
 }));
 app.use(bodyParser.json());
