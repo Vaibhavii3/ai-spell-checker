@@ -4,7 +4,6 @@ import axios from 'axios';
 import "../style/SignUpPage.css";
 
 const SignUpPage = () => {
-
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -20,7 +19,6 @@ const SignUpPage = () => {
   const [otpLoading, setOtpLoading] = useState(false);
   const navigate = useNavigate();
 
-  // Handle input changes
   const handleChange = (e) => {
     const { id, value } = e.target;
     setFormData((prevData) => ({
@@ -29,7 +27,6 @@ const SignUpPage = () => {
     }));
   };
 
-  //Request Otp
   const handleRequestOTP = async (e) => {
     e.preventDefault();
     setError("");
@@ -51,30 +48,25 @@ const SignUpPage = () => {
         }
       );
 
-      console.log("OTP Response:", response.data);
-
       if (response.data.success) {
         setSuccess("OTP sent successfully to your email");
         setOtpSent(true);
       } else {
-        setError(response.data.message || "Failed too send OTP");
+        setError(response.data.message || "Failed to send OTP");
       }
     } catch (err) {
-      console.error("OTP Error:", err);
       setError(err.response?.data?.message || "Failed to send OTP. Please try again.");
     } finally {
       setOtpLoading(false);
     }
   };
 
-  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
     setSuccess("");
     setLoading(true);
 
-    // Basic validation for empty fields
     if (!formData.name || !formData.email || !formData.password || !formData.confirmPassword || !formData.otp) {
       setError("All fields are required.");
       setLoading(false);
@@ -82,11 +74,10 @@ const SignUpPage = () => {
     }
 
     if (formData.password !== formData.confirmPassword) {
-      setError("Password do not match.");
+      setError("Passwords do not match.");
       setLoading(false);
       return;
     }
-
 
     try {
       const response = await axios.post(`${process.env.REACT_APP_API_URL}/auth/signup`, formData, {
@@ -95,16 +86,12 @@ const SignUpPage = () => {
         },
       });
 
-      
-    console.log("Response received: ", response.data);
-
       if (response.status === 200 && response.data.success) {
         setSuccess("Registration successful! Redirecting to login...");
-        // Store token if returned in response
         localStorage.setItem("authToken", response.data.token);
         setTimeout(() => {
           navigate("/login");
-        }, 2000); // Redirect after 2 seconds
+        }, 2000);
       }
     } catch (err) {
       setError(err.response?.data?.message || "An error occurred. Please try again.");
@@ -116,20 +103,13 @@ const SignUpPage = () => {
   return (
     <div className="signup-container">
       <div className="signup-form">
-        <h2 className="signup-title">
-          Sign Up
-        </h2>
+        <h2 className="signup-title">Create Account</h2>
 
         <form onSubmit={handleSubmit}>
-
           <div className="form-group">
-
-            <label
-              htmlFor="name"
-              className="form-label">
+            <label htmlFor="name" className="form-label">
               Full Name
             </label>
-
             <input
               type="text"
               id="name"
@@ -138,38 +118,31 @@ const SignUpPage = () => {
               value={formData.name}
               onChange={handleChange}
             />
-
           </div>
 
           <div className="form-group">
-
-            <label
-              htmlFor="email"
-              className="form-label"
-            >
-              Email
+            <label htmlFor="email" className="form-label">
+              Email Address
             </label>
-
-          <div className="email-group">
-
-            <input
-              type="email"
-              id="email"
-              placeholder="Enter your email"
-              className="form-input"
-              value={formData.email}
-              onChange={handleChange}
-              disabled={otpSent}
-            />
-            {!otpSent && (
-              <button
-                type="button"
-                onClick={handleRequestOTP}
-                className="otp-button"
-                disabled={otpLoading}>
-                  {otpLoading ? "Sending..." : "Get OTP"}
-                </button>
-            )}
+            <div className="email-group">
+              <input
+                type="email"
+                id="email"
+                placeholder="Enter your email"
+                className="form-input"
+                value={formData.email}
+                onChange={handleChange}
+                disabled={otpSent}
+              />
+              {!otpSent && (
+                <button
+                  type="button"
+                  onClick={handleRequestOTP}
+                  className="otp-button"
+                  disabled={otpLoading}>
+                    {otpLoading ? "Sending..." : "Get OTP"}
+                  </button>
+              )}
             </div>
           </div>
 
@@ -190,23 +163,17 @@ const SignUpPage = () => {
           )}
 
           <div className="form-group">
-
-            <label
-              htmlFor="password"
-              className="form-label"
-            >
+            <label htmlFor="password" className="form-label">
               Password
             </label>
-
             <input
               type="password"
               id="password"
-              placeholder="Enter your password"
+              placeholder="Create a password"
               className="form-input"
               value={formData.password}
               onChange={handleChange}
             />
-
           </div>
 
           <div className="form-group">
@@ -228,9 +195,8 @@ const SignUpPage = () => {
             className="signup-button"
             disabled={loading || !otpSent}
           >
-            {loading ? "Signing Up..." : "Sign Up"}
+            {loading ? "Creating Account..." : "Create Account"}
           </button>
-
         </form>
 
         {error && <p className="error-message">{error}</p>}
@@ -238,11 +204,8 @@ const SignUpPage = () => {
 
         <p className="login-text">
           Already have an account?{" "}
-          <Link
-            to="/login"
-            className="login-link"
-          >
-            Login
+          <Link to="/login" className="login-link">
+            Sign In
           </Link>
         </p>
       </div>

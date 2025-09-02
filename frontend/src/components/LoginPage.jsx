@@ -4,7 +4,6 @@ import axios from 'axios';
 import "../style/LoginPage.css";
 
 const LoginPage = () => {
-
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -22,13 +21,10 @@ const LoginPage = () => {
     }));
   };
 
-  // Handle form submission
   const handleSubmit = async (event) => {
     event.preventDefault();
     setError("");
     setLoading(true);
-
-    console.log("Login form data:", formData);
 
     try {
       const response = await axios.post(`${process.env.REACT_APP_API_URL}/auth/login`, formData, {
@@ -37,35 +33,24 @@ const LoginPage = () => {
         },
       });
 
-      console.log("Login response:", response.data); 
-  
-      // Save token to localStorage/sessionStorage
       localStorage.setItem("authToken", response.data.token);
-
-      // Redirect to dashboard or homepage
       navigate("/text");
     } catch (err) {
-      console.log("Error response:", err.response?.data); 
       setError(err.response?.data?.message || "Invalid login credentials");
     } finally {
       setLoading(false);
     }
   };
 
-
   return (
     <div className="login-container">
       <div className="login-form">
-        <h2 className="login-title"> Login </h2>
+        <h2 className="login-title">Welcome Back</h2>
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-
-            <label
-              htmlFor="email"
-              className="form-label">
-              Email
+            <label htmlFor="email" className="form-label">
+              Email Address
             </label>
-
             <input
               type="email"
               id="email"
@@ -75,18 +60,12 @@ const LoginPage = () => {
               value={formData.email}
               onChange={handleChange}
             />
-
           </div>
 
           <div className="form-group">
-
-            <label
-              htmlFor="password"
-              className="form-label"
-            >
+            <label htmlFor="password" className="form-label">
               Password
             </label>
-
             <input
               type="password"
               id="password"
@@ -95,14 +74,13 @@ const LoginPage = () => {
               value={formData.password}
               onChange={handleChange}
             />
-            
           </div>
 
           <button
             type="submit"
             className="login-button"
             disabled={loading}>
-            {loading ? "Logging in..." : "Login"}
+            {loading ? "Signing In..." : "Sign In"}
           </button>
         </form>
 
@@ -110,10 +88,8 @@ const LoginPage = () => {
         
         <p className="signup-text">
           Don't have an account?{" "}
-          <Link
-            to="/signup"
-            className="signup-link">
-            Sign Up
+          <Link to="/signup" className="signup-link">
+            Create Account
           </Link>
         </p>
       </div>
