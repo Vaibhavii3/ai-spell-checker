@@ -425,7 +425,7 @@ const Homepage = () => {
                 }}
               >
                 <Link to="/login" style={styles.link}>
-                Try It Free Now
+                Try It Now
                 </Link>
               </button>
             </div>
@@ -501,44 +501,6 @@ const Homepage = () => {
                   </button>
                 </div>
               </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Call to Action Section */}
-        <section style={styles.cta}>
-          <div style={styles.container}>
-            <h2 style={styles.ctaTitle}>Ready to Transform Your Writing?</h2>
-            <p style={styles.ctaDescription}>
-              Start creating better content today with our AI-powered text processor. No signup required.
-            </p>
-            <div style={styles.ctaButtons}>
-              <button 
-                style={styles.ctaPrimary}
-                onMouseEnter={(e) => {
-                  e.target.style.backgroundColor = '#5a67d8';
-                  e.target.style.transform = 'translateY(-2px)';
-                }}
-                onMouseLeave={(e) => {
-                  e.target.style.backgroundColor = '#667eea';
-                  e.target.style.transform = 'translateY(0)';
-                }}
-              >
-                Get Started Free
-              </button>
-              <button 
-                style={styles.ctaSecondary}
-                onMouseEnter={(e) => {
-                  e.target.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
-                  e.target.style.transform = 'translateY(-2px)';
-                }}
-                onMouseLeave={(e) => {
-                  e.target.style.backgroundColor = 'transparent';
-                  e.target.style.transform = 'translateY(0)';
-                }}
-              >
-                Learn More
-              </button>
             </div>
           </div>
         </section>
