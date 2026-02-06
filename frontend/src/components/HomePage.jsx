@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from "react-router-dom";
+import bg from '../assets/bg.png';
 
 const Homepage = () => {
   const [currentFeature, setCurrentFeature] = useState(0);
@@ -73,29 +74,32 @@ const Homepage = () => {
       overflow: 'hidden'
     },
     hero: {
-      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+      backgroundImage: `url(${bg})`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundRepeat: 'no-repeat',
+      backgroundAttachment: 'fixed',
       minHeight: '100vh',
       display: 'flex',
       alignItems: 'center',
       position: 'relative',
       overflow: 'hidden'
     },
-    heroBackground: {
+    heroOverlay: {
       position: 'absolute',
       top: 0,
       left: 0,
       right: 0,
       bottom: 0,
-      opacity: 0.1,
-      background: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-      animation: 'float 20s infinite linear'
+      backgroundColor: 'rgba(0, 0, 0, 0.6)',
+      zIndex: 1
     },
     container: {
       maxWidth: '1200px',
       margin: '0 auto',
       padding: '0 2rem',
       position: 'relative',
-      zIndex: 1
+      zIndex: 2
     },
     heroContent: {
       textAlign: 'center',
@@ -111,13 +115,15 @@ const Homepage = () => {
       backgroundClip: 'text',
       WebkitBackgroundClip: 'text',
       WebkitTextFillColor: 'transparent',
-      animation: 'slideInUp 1s ease-out'
+      animation: 'slideInUp 1s ease-out',
+      textShadow: '2px 2px 4px rgba(0, 0, 0, 0.3)'
     },
     heroSubtitle: {
       fontSize: 'clamp(1.1rem, 2vw, 1.5rem)',
       marginBottom: '3rem',
-      opacity: 0.9,
-      animation: 'slideInUp 1s ease-out 0.2s both'
+      opacity: 0.95,
+      animation: 'slideInUp 1s ease-out 0.2s both',
+      textShadow: '1px 1px 2px rgba(0, 0, 0, 0.5)'
     },
     ctaButton: {
       display: 'inline-block',
@@ -404,7 +410,7 @@ const Homepage = () => {
       <div style={styles.homepage}>
         {/* Hero Section */}
         <section style={styles.hero}>
-          <div style={styles.heroBackground}></div>
+          <div style={styles.heroOverlay}></div>
           <div style={styles.container}>
             <div style={styles.heroContent}>
               <h1 style={styles.heroTitle}>

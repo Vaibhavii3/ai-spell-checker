@@ -12,6 +12,14 @@ const sendotp = async(req, res) => {
     try {
         const {email} = req.body;
 
+        // check if email is provided
+        if (!email) {
+            return res.status(400).json({
+                success: false,
+                message: 'Email is required',
+            });
+        }
+
         const checkUserPresent = await User.findOne({email});
 
         if(checkUserPresent) {
@@ -30,8 +38,9 @@ const sendotp = async(req, res) => {
 
         //check unique otp or not
         let result = await OTP.findOne({otp: otp});
-        console.log("OTP generated: ", OTP);
+        console.log("OTP generated: ", otp);
         console.log("Result", result);
+
         while(result) {
             otp = otpGenerator.generate(6, {
                 upperCaseAlphabets:false,
@@ -42,13 +51,8 @@ const sendotp = async(req, res) => {
         }
 
         const otpPayload = {email, otp};
-
         const otpBody = await OTP.create(otpPayload);
-        console.log(otpBody);
-
-         // Send OTP via email
-        const emailBody = `<h1>Your OTP is: ${otp}</h1>`;
-        await mailSender(email, "Your OTP for AIChecker", emailBody);
+        console.log("OTP document created" ,otpBody);
 
         res.status(200).json({
             success:true,
@@ -64,14 +68,11 @@ const sendotp = async(req, res) => {
     }
 }
 
-
-
 // Signup Controller
 const signup = async (req, res) => {
     try {
         console.log("Incoming request:", req.body);
         const { name, email, password, confirmPassword, otp } = req.body;
-
 
         if (!name || !email || !password || !confirmPassword || !otp) {
             console.log("Missing fields");
@@ -119,21 +120,19 @@ const signup = async (req, res) => {
             })
         }
 
-        
         const hashedPassword = await bcrypt.hash(password, 10);
-        console.log("Password hashed");
 
         const user = await User.create({ 
             name, 
             email, 
-            password,
+            password: hashedPassword,
             image: `https://api.dicebear.com/5.x/initials/svg?seed=${name}`,
         });
         
         const token = jwt.sign(
             { id: user._id, email: user.email, name: user.name }, 
             process.env.JWT_SECRET, 
-            { expiresIn: '1h' }
+            { expiresIn: '2h' }
         );
 
         console.log("User created:", user._id);
@@ -142,6 +141,12 @@ const signup = async (req, res) => {
             success:true,
             message: "User created successfully", 
             token,
+            user: {
+                name: user.name,
+                email: user.email,
+                image: user.image,
+                _id: user._id
+            }
         });
             
     } catch (error) {
@@ -187,7 +192,6 @@ const login = async (req, res) => {
             name: user.name
         };
 
-        
         const token = jwt.sign(
             payload, 
             process.env.JWT_SECRET, 
@@ -199,7 +203,6 @@ const login = async (req, res) => {
             email: user.email,
             image: user.image,
             _id: user._id,
-            token,
         };
 
             return res.status(200).json({
@@ -265,6 +268,7 @@ const changePassword = async (req, res) => {
         const payload = {
             email: existingUser.email,
             id: existingUser._id,
+            name: existingUser.name
         };
         
         const token = jwt.sign(

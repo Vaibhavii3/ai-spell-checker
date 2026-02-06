@@ -36,9 +36,22 @@ const authMiddleware = async (req, res, next) => {
             
             next();
         } catch (error) {
+            // Handle specific JWT errors
+            if (error.name === 'TokenExpiredError') {
+                return res.status(401).json({
+                    success: false,
+                    message: 'Token has expired. Please login again'
+                });
+            }
+            if (error.name === 'JsonWebTokenError') {
+                return res.status(401).json({
+                    success: false,
+                    message: 'Invalid token'
+                });
+            }
             return res.status(401).json({
                 success: false,
-                message: 'Invalid or expired token',
+                message: 'Token verification failed',
                 error: error.message
             });
         }
