@@ -430,7 +430,7 @@ const Homepage = () => {
                   e.target.style.transform = 'translateY(0)';
                 }}
               >
-                <Link to="/login" style={styles.link}>
+                <Link to="/text" style={styles.link}>
                 Try It Now
                 </Link>
               </button>

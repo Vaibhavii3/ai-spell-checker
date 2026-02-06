@@ -6,7 +6,8 @@ const TextProcessor = () => {
     textProcessor: {
       minHeight: '100vh',
       backgroundColor: '#f8fafc',
-      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
+      fontFamily:
+        '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
     },
     header: {
       background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
@@ -43,23 +44,13 @@ const TextProcessor = () => {
     },
     controlGroup: {
       display: 'flex',
-      flexDirection: 'column',
-      minWidth: '150px'
+      flexDirection: 'column'
     },
     label: {
       fontSize: '0.875rem',
       fontWeight: '500',
       color: '#374151',
       marginBottom: '0.5rem'
-    },
-    select: {
-      padding: '0.5rem',
-      border: '2px solid #e5e7eb',
-      borderRadius: '8px',
-      fontSize: '0.875rem',
-      backgroundColor: 'white',
-      cursor: 'pointer',
-      transition: 'border-color 0.2s'
     },
     buttonGroup: {
       display: 'flex',
@@ -74,9 +65,7 @@ const TextProcessor = () => {
       borderRadius: '8px',
       fontSize: '0.875rem',
       fontWeight: '500',
-      cursor: 'pointer',
-      transition: 'all 0.2s',
-      opacity: 1
+      cursor: 'pointer'
     },
     btnSecondary: {
       backgroundColor: '#6b7280',
@@ -86,8 +75,7 @@ const TextProcessor = () => {
       borderRadius: '8px',
       fontSize: '0.875rem',
       fontWeight: '500',
-      cursor: 'pointer',
-      transition: 'all 0.2s'
+      cursor: 'pointer'
     },
     btnSmall: {
       backgroundColor: '#667eea',
@@ -97,8 +85,7 @@ const TextProcessor = () => {
       borderRadius: '6px',
       fontSize: '0.75rem',
       fontWeight: '500',
-      cursor: 'pointer',
-      transition: 'all 0.2s'
+      cursor: 'pointer'
     },
     btnDisabled: {
       opacity: 0.5,
@@ -152,13 +139,7 @@ const TextProcessor = () => {
       outline: 'none',
       resize: 'vertical',
       fontSize: '0.875rem',
-      lineHeight: '1.6',
-      fontFamily: 'inherit',
-      backgroundColor: 'white'
-    },
-    resultActions: {
-      display: 'flex',
-      gap: '0.5rem'
+      lineHeight: '1.6'
     },
     resultText: {
       padding: '1.5rem',
@@ -169,6 +150,7 @@ const TextProcessor = () => {
       backgroundColor: '#f9fafb'
     }
   };
+
   const [text, setText] = useState('');
   const [result, setResult] = useState('');
   const [mode, setMode] = useState('spell');
@@ -184,217 +166,171 @@ const TextProcessor = () => {
     { value: 'tone', label: 'Change Tone' },
     { value: 'vocabulary', label: 'Enhance Vocabulary' },
     { value: 'default', label: 'Improve Overall' },
-    { value: 'goal', label: 'Goal-Based Writing'}
+    { value: 'goal', label: 'Goal-Based Writing' }
   ];
 
-  const tones = [
-    { value: 'professional', label: 'Professional' },
-    { value: 'casual', label: 'Casual' },
-    { value: 'formal', label: 'Formal' },
-    { value: 'friendly', label: 'Friendly' },
-    { value: 'academic', label: 'Academic' }
-  ];
-
-  const goals = [
-  { value: 'email', label: 'Email' },
-  { value: 'essay', label: 'Essay' },
-  { value: 'story', label: 'Story' },
-  { value: 'resume', label: 'Resume' }
-];
-
+  const tones = ['professional', 'casual', 'formal', 'friendly', 'academic'];
+  const goals = ['email', 'essay', 'story', 'resume'];
 
   const processText = async () => {
     if (!text.trim()) {
-      setError('Please enter some text to process');
+      setError('Please enter some text');
       return;
     }
 
     setLoading(true);
     setError('');
-    
-    try {
-      const token = localStorage.getItem("authToken");
-            if (!token) {
-              console.error("No token found");
-              setError("Authorization token missing.");
-              setLoading(false);
-              return;
-            }
 
-      const response = await axios.post(`${process.env.REACT_APP_API_URL}/spell/process`, 
+    try {
+      const res = await axios.post(
+        `${process.env.REACT_APP_API_URL}/spell/process`,
         {
           text: text.trim(),
           mode,
           tone: mode === 'tone' ? tone : undefined,
-          goal: mode === 'goal' ? goal : undefined
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`,
-          }
-        },
+          goalType: mode === 'goal' ? goal : undefined
+        }
       );
 
-      setResult(response.data.result || 'No result received');
+      setResult(res.data.result || '');
     } catch (err) {
-      setError( err.response?.data?.error || err.message || 'An error occurred while processing');
+      setError(
+        err.response?.data?.message ||
+          err.message ||
+          'Something went wrong'
+      );
     } finally {
       setLoading(false);
     }
   };
 
-  const clearAll = () => {
-    setText('');
-    setResult('');
-    setError('');
-  };
-
-  const copyResult = () => {
-    navigator.clipboard.writeText(result);
-  };
-
-  const replaceOriginal = () => {
-    setText(result);
-    setResult('');
-  };
-
   return (
     <div style={styles.textProcessor}>
       <header style={styles.header}>
-        <h1 style={styles.headerTitle}>Text Processor</h1>
-        <p style={styles.headerSubtitle}>Improve your writing with AI assistance</p>
+        <h1 style={styles.headerTitle}>AI Text Processor</h1>
+        <p style={styles.headerSubtitle}>
+          Improve your writing instantly using AI
+        </p>
       </header>
-
 
       <div style={styles.container}>
         <div style={styles.controls}>
           <div style={styles.controlGroup}>
-<div style={styles.controlGroup}>
-  <label style={styles.label}>Processing Mode:</label>
-  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
-    {modes.map(m => (
-      <button
-        key={m.value}
-        onClick={() => setMode(m.value)}
-        style={{
-          ...styles.btnSmall,
-          backgroundColor: mode === m.value ? '#4f46e5' : '#e5e7eb',
-          color: mode === m.value ? 'white' : '#111827'
-        }}
-      >
-        {m.label}
-      </button>
-    ))}
-  </div>
-</div>
-
-{mode === 'tone' && (
-  <div style={styles.controlGroup}>
-    <label style={styles.label}>Tone:</label>
-    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
-      {tones.map(t => (
-        <button
-          key={t.value}
-          onClick={() => setTone(t.value)}
-          style={{
-            ...styles.btnSmall,
-            backgroundColor: tone === t.value ? '#4f46e5' : '#e5e7eb',
-            color: tone === t.value ? 'white' : '#111827'
-          }}
-        >
-          {t.label}
-        </button>
-      ))}
-    </div>
-  </div>
-)}
-
-
-{mode === 'goal' && (
-  <div style={styles.controlGroup}>
-    <label style={styles.label}>Writing Goal:</label>
-    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
-      {goals.map(g => (
-        <button
-          key={g.value}
-          onClick={() => setGoal(g.value)}
-          style={{
-            ...styles.btnSmall,
-            backgroundColor: goal === g.value ? '#4f46e5' : '#e5e7eb',
-            color: goal === g.value ? 'white' : '#111827'
-          }}
-        >
-          {g.label}
-        </button>
-      ))}
-    </div>
-  </div>
-)}
-
+            <label style={styles.label}>Mode</label>
+            <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+              {modes.map(m => (
+                <button
+                  key={m.value}
+                  onClick={() => setMode(m.value)}
+                  style={{
+                    ...styles.btnSmall,
+                    backgroundColor:
+                      mode === m.value ? '#4f46e5' : '#e5e7eb',
+                    color: mode === m.value ? 'white' : '#111827'
+                  }}
+                >
+                  {m.label}
+                </button>
+              ))}
             </div>
+          </div>
 
+          {mode === 'tone' && (
+            <div style={styles.controlGroup}>
+              <label style={styles.label}>Tone</label>
+              <div style={{ display: 'flex', gap: '0.5rem' }}>
+                {tones.map(t => (
+                  <button
+                    key={t}
+                    onClick={() => setTone(t)}
+                    style={{
+                      ...styles.btnSmall,
+                      backgroundColor:
+                        tone === t ? '#4f46e5' : '#e5e7eb',
+                      color: tone === t ? 'white' : '#111827'
+                    }}
+                  >
+                    {t}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {mode === 'goal' && (
+            <div style={styles.controlGroup}>
+              <label style={styles.label}>Goal</label>
+              <div style={{ display: 'flex', gap: '0.5rem' }}>
+                {goals.map(g => (
+                  <button
+                    key={g}
+                    onClick={() => setGoal(g)}
+                    style={{
+                      ...styles.btnSmall,
+                      backgroundColor:
+                        goal === g ? '#4f46e5' : '#e5e7eb',
+                      color: goal === g ? 'white' : '#111827'
+                    }}
+                  >
+                    {g}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
 
           <div style={styles.buttonGroup}>
-            <button 
-              onClick={processText} 
-              disabled={loading || !text.trim()}
+            <button
+              onClick={processText}
+              disabled={loading}
               style={{
                 ...styles.btnPrimary,
-                ...(loading || !text.trim() ? styles.btnDisabled : {})
+                ...(loading ? styles.btnDisabled : {})
               }}
             >
-              {loading ? 'Processing...' : 'Process Text'}
+              {loading ? 'Processing…' : 'Process Text'}
             </button>
-            <button 
-              onClick={clearAll}
+            <button
+              onClick={() => {
+                setText('');
+                setResult('');
+                setError('');
+              }}
               style={styles.btnSecondary}
             >
-              Clear All
+              Clear
             </button>
           </div>
         </div>
 
-        {error && (
-          <div style={styles.error}>
-            {error}
-          </div>
-        )}
+        {error && <div style={styles.error}>{error}</div>}
 
-        <div style={{
-          ...styles.editorSection,
-          ...(result ? styles.editorSectionWithResult : {})
-        }}>
+        <div
+          style={{
+            ...styles.editorSection,
+            ...(result ? styles.editorSectionWithResult : {})
+          }}
+        >
           <div style={styles.editorContainer}>
             <div style={styles.editorHeader}>
-              <h3 style={styles.editorHeaderTitle}>Input Text</h3>
-              <span style={styles.charCount}>{text.length} characters</span>
+              <h3 style={styles.editorHeaderTitle}>Input</h3>
+              <span style={styles.charCount}>{text.length} chars</span>
             </div>
             <textarea
               value={text}
-              onChange={(e) => setText(e.target.value)}
-              placeholder="Enter your text here..."
+              onChange={e => setText(e.target.value)}
+              placeholder="Enter text here..."
+              rows={10}
               style={styles.editor}
-              rows="10"
             />
           </div>
 
           {result && (
             <div style={styles.editorContainer}>
               <div style={styles.editorHeader}>
-                <h3 style={styles.editorHeaderTitle}>Processed Result</h3>
-                <div style={styles.resultActions}>
-                  <button onClick={copyResult} style={styles.btnSmall}>
-                    Copy
-                  </button>
-                  <button onClick={replaceOriginal} style={styles.btnSmall}>
-                    Replace Original
-                  </button>
-                </div>
+                <h3 style={styles.editorHeaderTitle}>Result</h3>
               </div>
-              <div style={styles.resultText}>
-                {result}
-              </div>
+              <div style={styles.resultText}>{result}</div>
             </div>
           )}
         </div>
