@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import bg from '../assets/bg.png';
 
 const Homepage = () => {
-  const [currentFeature, setCurrentFeature] = useState(0);
+  const [currentFeature] = useState(0);
   const [isVisible, setIsVisible] = useState({});
 
   const features = [
