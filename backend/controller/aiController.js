@@ -2,7 +2,7 @@ const axios = require("axios");
 require("dotenv").config();
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
-const GEMINI_URL = process.env.GEMINI_URL;
+// const GEMINI_URL = process.env.GEMINI_URL;
 
 exports.processText = async (req, res) => {
   const { text, mode, tone = "default", goalType } = req.body;
@@ -18,6 +18,9 @@ exports.processText = async (req, res) => {
       mode === "goal"
         ? buildGoalPrompt(goalType, text, tone)
         : buildPrompt(text, mode, tone);
+
+    const MODEL_NAME = "gemini-1.5-flash";
+    const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL_NAME}:generateContent`;
 
     const response = await axios.post(
       `${GEMINI_URL}?key=${GEMINI_API_KEY}`,
