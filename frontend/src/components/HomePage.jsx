@@ -3,49 +3,66 @@ import { Link } from "react-router-dom";
 import bg from '../assets/bg.png';
 
 const Homepage = () => {
-  const [currentFeature] = useState(0);
   const [isVisible, setIsVisible] = useState({});
+  const [currentFeatureIndex, setCurrentFeatureIndex] = useState(0);
 
   const features = [
     {
-      icon: "✓",
       title: "Spell Check",
-      description: "Instantly detect and correct spelling mistakes in your text",
-      color: "#10b981"
+      description: "Instantly detect and correct spelling mistakes with AI-powered accuracy",
+      color: "#8b7355",
+      gradient: "linear-gradient(135deg, #8b7355 0%, #a68968 100%)"
     },
     {
-      icon: "📝",
       title: "Grammar Fix",
-      description: "Fix grammatical errors and improve sentence structure",
-      color: "#3b82f6"
+      description: "Perfect your grammar and sentence structure effortlessly",
+      color: "#6b5b3d",
+      gradient: "linear-gradient(135deg, #6b5b3d 0%, #8b7355 100%)"
     },
     {
-      icon: "🔄",
-      title: "Rephrase",
-      description: "Rewrite sentences for better clarity and flow",
-      color: "#8b5cf6"
+      title: "Smart Rephrase",
+      description: "Rewrite sentences for crystal-clear communication",
+      color: "#9d8b6d",
+      gradient: "linear-gradient(135deg, #9d8b6d 0%, #b5a384 100%)"
     },
     {
-      icon: "🎯",
       title: "Tone Adjustment",
-      description: "Change the tone to match your audience and purpose",
-      color: "#f59e0b"
+      description: "Adapt your writing style to match any audience or purpose",
+      color: "#7d6b4f",
+      gradient: "linear-gradient(135deg, #7d6b4f 0%, #9d8b6d 100%)"
     },
     {
-      icon: "📚",
       title: "Vocabulary Enhancement",
-      description: "Upgrade your vocabulary with more sophisticated words",
-      color: "#ef4444"
+      description: "Elevate your language with sophisticated word choices",
+      color: "#5d4d37",
+      gradient: "linear-gradient(135deg, #5d4d37 0%, #7d6b4f 100%)"
     },
     {
-      icon: "✨",
-      title: "Overall Improvement",
-      description: "Comprehensive enhancement of your writing quality",
-      color: "#06b6d4"
+      title: "SEO Optimization",
+      description: "Optimize your content for better search engine visibility",
+      color: "#8b7355",
+      gradient: "linear-gradient(135deg, #8b7355 0%, #a68968 100%)"
+    },
+    {
+      title: "Writing Analysis",
+      description: "Get detailed insights on readability and writing quality",
+      color: "#6b5b3d",
+      gradient: "linear-gradient(135deg, #6b5b3d 0%, #8b7355 100%)"
+    },
+    {
+      title: "Text Expansion",
+      description: "Transform brief ideas into comprehensive, detailed content",
+      color: "#9d8b6d",
+      gradient: "linear-gradient(135deg, #9d8b6d 0%, #b5a384 100%)"
+    },
+    {
+      title: "Smart Compression",
+      description: "Distill lengthy text into concise, impactful messages",
+      color: "#7d6b4f",
+      gradient: "linear-gradient(135deg, #7d6b4f 0%, #9d8b6d 100%)"
     }
   ];
 
-  
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -66,11 +83,18 @@ const Homepage = () => {
     return () => observer.disconnect();
   }, []);
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentFeatureIndex((prev) => (prev + 1) % features.length);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, [features.length]);
+
   const styles = {
     homepage: {
       fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
       lineHeight: 1.6,
-      color: '#1f2937',
+      color: '#4a4035',
       overflow: 'hidden'
     },
     hero: {
@@ -91,8 +115,23 @@ const Homepage = () => {
       left: 0,
       right: 0,
       bottom: 0,
-      backgroundColor: 'rgba(0, 0, 0, 0.6)',
+      background: 'linear-gradient(135deg, rgba(107, 91, 61, 0.85) 0%, rgba(139, 115, 85, 0.75) 100%)',
       zIndex: 1
+    },
+    heroParticles: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      overflow: 'hidden',
+      zIndex: 1
+    },
+    particle: {
+      position: 'absolute',
+      background: 'rgba(250, 248, 243, 0.1)',
+      borderRadius: '50%',
+      animation: 'float 20s infinite ease-in-out'
     },
     container: {
       maxWidth: '1200px',
@@ -103,105 +142,184 @@ const Homepage = () => {
     },
     heroContent: {
       textAlign: 'center',
-      color: 'white',
-      maxWidth: '800px',
+      color: '#faf8f3',
+      maxWidth: '900px',
       margin: '0 auto'
     },
     heroTitle: {
-      fontSize: 'clamp(2.5rem, 5vw, 4rem)',
-      fontWeight: '700',
+      fontSize: 'clamp(2.5rem, 5vw, 4.5rem)',
+      fontWeight: '800',
       marginBottom: '1.5rem',
-      background: 'linear-gradient(45deg, #ffffff, #e0e7ff)',
-      backgroundClip: 'text',
-      WebkitBackgroundClip: 'text',
-      WebkitTextFillColor: 'transparent',
+      lineHeight: '1.2',
+      textShadow: '2px 4px 8px rgba(0, 0, 0, 0.3)',
       animation: 'slideInUp 1s ease-out',
-      textShadow: '2px 2px 4px rgba(0, 0, 0, 0.3)'
+      letterSpacing: '-1px'
     },
     heroSubtitle: {
-      fontSize: 'clamp(1.1rem, 2vw, 1.5rem)',
+      fontSize: 'clamp(1.1rem, 2vw, 1.4rem)',
       marginBottom: '3rem',
       opacity: 0.95,
       animation: 'slideInUp 1s ease-out 0.2s both',
-      textShadow: '1px 1px 2px rgba(0, 0, 0, 0.5)'
+      textShadow: '1px 2px 4px rgba(0, 0, 0, 0.3)',
+      lineHeight: '1.8',
+      maxWidth: '700px',
+      margin: '0 auto 3rem'
+    },
+    ctaButtonGroup: {
+      display: 'flex',
+      gap: '1.5rem',
+      justifyContent: 'center',
+      flexWrap: 'wrap',
+      animation: 'slideInUp 1s ease-out 0.4s both'
     },
     ctaButton: {
       display: 'inline-block',
-      padding: '1rem 2.5rem',
-      backgroundColor: 'rgba(255, 255, 255, 0.2)',
-      color: 'white',
+      padding: '1.2rem 3rem',
+      backgroundColor: '#faf8f3',
+      color: '#6b5b3d',
       textDecoration: 'none',
       borderRadius: '50px',
       fontSize: '1.1rem',
-      fontWeight: '600',
-      border: '2px solid rgba(255, 255, 255, 0.3)',
-      backdropFilter: 'blur(10px)',
-      transition: 'all 0.3s ease',
-      animation: 'slideInUp 1s ease-out 0.4s both',
-      cursor: 'pointer'
-    },
-    features: {
-      padding: '6rem 0',
-      backgroundColor: '#f8fafc'
-    },
-    sectionTitle: {
-      fontSize: 'clamp(2rem, 4vw, 3rem)',
       fontWeight: '700',
-      textAlign: 'center',
-      marginBottom: '1rem',
-      background: 'linear-gradient(135deg, #667eea, #764ba2)',
-      backgroundClip: 'text',
-      WebkitBackgroundClip: 'text',
-      WebkitTextFillColor: 'transparent'
+      border: 'none',
+      transition: 'all 0.4s ease',
+      cursor: 'pointer',
+      boxShadow: '0 8px 25px rgba(0, 0, 0, 0.2)',
+      letterSpacing: '0.3px'
     },
-    sectionSubtitle: {
-      fontSize: '1.2rem',
-      textAlign: 'center',
-      color: '#6b7280',
-      marginBottom: '4rem',
-      maxWidth: '600px',
-      margin: '0 auto 4rem'
+    ctaButtonSecondary: {
+      display: 'inline-block',
+      padding: '1.2rem 3rem',
+      backgroundColor: 'transparent',
+      color: '#faf8f3',
+      textDecoration: 'none',
+      borderRadius: '50px',
+      fontSize: '1.1rem',
+      fontWeight: '700',
+      border: '2px solid rgba(250, 248, 243, 0.5)',
+      backdropFilter: 'blur(10px)',
+      transition: 'all 0.4s ease',
+      cursor: 'pointer',
+      letterSpacing: '0.3px'
     },
-    featuresGrid: {
+    stats: {
+      padding: '4rem 0',
+      background: 'linear-gradient(135deg, #f5f1e8 0%, #e8dcc4 100%)'
+    },
+    statsGrid: {
       display: 'grid',
-      gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-      gap: '2rem',
-      marginTop: '4rem'
+      gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+      gap: '3rem',
+      textAlign: 'center'
     },
-    featureCard: {
-      background: 'white',
-      padding: '2rem',
-      borderRadius: '20px',
-      textAlign: 'center',
-      boxShadow: '0 10px 30px rgba(0, 0, 0, 0.1)',
-      transition: 'all 0.3s ease',
-      position: 'relative',
-      overflow: 'hidden'
+    statCard: {
+      opacity: isVisible.stats ? 1 : 0,
+      transform: isVisible.stats ? 'translateY(0)' : 'translateY(30px)',
+      transition: 'all 0.8s ease'
     },
-    featureIcon: {
+    statIcon: {
       fontSize: '3rem',
       marginBottom: '1rem',
       display: 'block'
     },
-    featureTitle: {
-      fontSize: '1.5rem',
+    statNumber: {
+      fontSize: '3rem',
+      fontWeight: '800',
+      color: '#6b5b3d',
+      marginBottom: '0.5rem',
+      display: 'block'
+    },
+    statLabel: {
+      fontSize: '1.1rem',
+      color: '#8b7355',
       fontWeight: '600',
+      textTransform: 'uppercase',
+      letterSpacing: '1px'
+    },
+    features: {
+      padding: '6rem 0',
+      background: 'linear-gradient(135deg, #faf8f3 0%, #f5f1e8 100%)'
+    },
+    sectionTitle: {
+      fontSize: 'clamp(2.5rem, 4vw, 3.5rem)',
+      fontWeight: '800',
+      textAlign: 'center',
       marginBottom: '1rem',
-      color: '#1f2937'
+      color: '#6b5b3d',
+      letterSpacing: '-1px'
+    },
+    sectionSubtitle: {
+      fontSize: '1.25rem',
+      textAlign: 'center',
+      color: '#8b7355',
+      marginBottom: '5rem',
+      maxWidth: '700px',
+      margin: '0 auto 5rem',
+      lineHeight: '1.8'
+    },
+    featuresGrid: {
+      display: 'grid',
+      gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+      gap: '2.5rem',
+      marginTop: '4rem'
+    },
+    featureCard: {
+      background: 'white',
+      padding: '2.5rem',
+      borderRadius: '24px',
+      textAlign: 'center',
+      boxShadow: '0 10px 40px rgba(107, 91, 61, 0.12)',
+      transition: 'all 0.4s ease',
+      position: 'relative',
+      overflow: 'hidden',
+      border: '1px solid #e8dcc4'
+    },
+    featureCardGlow: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      height: '5px',
+      transition: 'all 0.4s ease'
+    },
+    featureIcon: {
+      fontSize: '3.5rem',
+      marginBottom: '1.5rem',
+      display: 'block',
+      filter: 'drop-shadow(0 4px 8px rgba(107, 91, 61, 0.2))'
+    },
+    featureTitle: {
+      fontSize: '1.6rem',
+      fontWeight: '700',
+      marginBottom: '1rem',
+      color: '#6b5b3d'
     },
     featureDescription: {
-      color: '#6b7280',
-      fontSize: '1rem'
+      color: '#8b7355',
+      fontSize: '1.05rem',
+      lineHeight: '1.7'
     },
     demo: {
       padding: '6rem 0',
-      backgroundColor: 'white',
-      position: 'relative'
+      background: 'linear-gradient(135deg, #6b5b3d 0%, #8b7355 100%)',
+      color: '#faf8f3',
+      position: 'relative',
+      overflow: 'hidden'
+    },
+    demoPattern: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      opacity: 0.05,
+      backgroundImage: 'radial-gradient(circle, #faf8f3 1px, transparent 1px)',
+      backgroundSize: '30px 30px'
     },
     demoContainer: {
       display: 'grid',
       gridTemplateColumns: '1fr 1fr',
-      gap: '4rem',
+      gap: '5rem',
       alignItems: 'center'
     },
     demoContent: {
@@ -210,15 +328,16 @@ const Homepage = () => {
       transition: 'all 0.8s ease'
     },
     demoTitle: {
-      fontSize: '2.5rem',
-      fontWeight: '700',
+      fontSize: 'clamp(2rem, 4vw, 3rem)',
+      fontWeight: '800',
       marginBottom: '1.5rem',
-      color: '#1f2937'
+      letterSpacing: '-0.5px'
     },
     demoDescription: {
-      fontSize: '1.1rem',
-      color: '#6b7280',
-      marginBottom: '2rem'
+      fontSize: '1.15rem',
+      marginBottom: '2.5rem',
+      lineHeight: '1.8',
+      opacity: 0.95
     },
     demoFeatures: {
       listStyle: 'none',
@@ -227,14 +346,24 @@ const Homepage = () => {
     demoFeature: {
       display: 'flex',
       alignItems: 'center',
-      marginBottom: '1rem',
-      fontSize: '1rem',
-      color: '#374151'
+      marginBottom: '1.25rem',
+      fontSize: '1.1rem',
+      padding: '0.75rem',
+      background: 'rgba(250, 248, 243, 0.1)',
+      borderRadius: '12px',
+      backdropFilter: 'blur(10px)'
     },
     demoFeatureIcon: {
-      color: '#10b981',
-      marginRight: '0.75rem',
-      fontSize: '1.2rem'
+      color: '#faf8f3',
+      marginRight: '1rem',
+      fontSize: '1.5rem',
+      background: 'rgba(250, 248, 243, 0.2)',
+      width: '40px',
+      height: '40px',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderRadius: '10px'
     },
     demoVisual: {
       position: 'relative',
@@ -243,133 +372,200 @@ const Homepage = () => {
       transition: 'all 0.8s ease 0.2s'
     },
     demoBox: {
-      background: 'linear-gradient(135deg, #667eea, #764ba2)',
-      borderRadius: '20px',
-      padding: '2rem',
-      color: 'white',
+      background: 'rgba(250, 248, 243, 0.15)',
+      backdropFilter: 'blur(20px)',
+      borderRadius: '24px',
+      padding: '3rem',
+      border: '1px solid rgba(250, 248, 243, 0.2)',
+      boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
       position: 'relative',
       overflow: 'hidden'
     },
+    demoBoxHeader: {
+      fontSize: '1rem',
+      fontWeight: '600',
+      marginBottom: '1.5rem',
+      textTransform: 'uppercase',
+      letterSpacing: '1px',
+      opacity: 0.8
+    },
     demoText: {
-      fontSize: '1.1rem',
-      marginBottom: '1rem',
-      position: 'relative',
-      zIndex: 2
+      fontSize: '1.3rem',
+      marginBottom: '1.5rem',
+      fontWeight: '600',
+      lineHeight: '1.6'
     },
     demoButton: {
-      background: 'rgba(255, 255, 255, 0.2)',
-      border: '1px solid rgba(255, 255, 255, 0.3)',
-      color: 'white',
-      padding: '0.75rem 1.5rem',
-      borderRadius: '10px',
-      fontSize: '0.9rem',
+      background: '#faf8f3',
+      color: '#6b5b3d',
+      padding: '1rem 2rem',
+      borderRadius: '12px',
+      fontSize: '1rem',
       cursor: 'pointer',
-      transition: 'all 0.3s ease'
+      transition: 'all 0.3s ease',
+      border: 'none',
+      fontWeight: '700',
+      width: '100%',
+      marginTop: '1rem'
     },
     testimonials: {
       padding: '6rem 0',
-      backgroundColor: '#f8fafc'
+      background: 'linear-gradient(135deg, #f5f1e8 0%, #e8dcc4 100%)'
     },
     testimonialsGrid: {
       display: 'grid',
-      gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-      gap: '2rem',
+      gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+      gap: '2.5rem',
       marginTop: '4rem'
     },
     testimonialCard: {
       background: 'white',
-      padding: '2rem',
-      borderRadius: '20px',
-      boxShadow: '0 10px 30px rgba(0, 0, 0, 0.1)',
-      position: 'relative'
+      padding: '2.5rem',
+      borderRadius: '24px',
+      boxShadow: '0 10px 40px rgba(107, 91, 61, 0.12)',
+      position: 'relative',
+      border: '1px solid #e8dcc4',
+      opacity: isVisible.testimonials ? 1 : 0,
+      transform: isVisible.testimonials ? 'translateY(0)' : 'translateY(30px)',
+      transition: 'all 0.8s ease'
+    },
+    quoteIcon: {
+      fontSize: '3rem',
+      color: '#e8dcc4',
+      position: 'absolute',
+      top: '1.5rem',
+      left: '1.5rem',
+      opacity: 0.3
+    },
+    testimonialRating: {
+      color: '#f59e0b',
+      fontSize: '1.2rem',
+      marginBottom: '1rem'
     },
     testimonialText: {
       fontSize: '1.1rem',
       fontStyle: 'italic',
-      marginBottom: '1.5rem',
-      color: '#374151'
+      marginBottom: '2rem',
+      color: '#6b5b3d',
+      lineHeight: '1.8',
+      position: 'relative',
+      zIndex: 1
     },
     testimonialAuthor: {
       display: 'flex',
-      alignItems: 'center'
+      alignItems: 'center',
+      paddingTop: '1.5rem',
+      borderTop: '1px solid #e8dcc4'
     },
     testimonialAvatar: {
-      fontSize: '2.5rem',
-      marginRight: '1rem'
+      fontSize: '3rem',
+      marginRight: '1rem',
+      background: 'linear-gradient(135deg, #e8dcc4 0%, #d4c4a8 100%)',
+      width: '60px',
+      height: '60px',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderRadius: '50%'
     },
     testimonialInfo: {
       flex: 1
     },
     testimonialName: {
-      fontWeight: '600',
-      color: '#1f2937',
-      marginBottom: '0.25rem'
+      fontWeight: '700',
+      color: '#6b5b3d',
+      marginBottom: '0.25rem',
+      fontSize: '1.1rem'
     },
     testimonialRole: {
-      color: '#6b7280',
-      fontSize: '0.9rem'
+      color: '#8b7355',
+      fontSize: '0.95rem',
+      fontWeight: '500'
     },
     cta: {
       padding: '6rem 0',
-      background: 'linear-gradient(135deg, #1f2937 0%, #374151 100%)',
-      color: 'white',
-      textAlign: 'center'
+      background: 'linear-gradient(135deg, #6b5b3d 0%, #4a4035 100%)',
+      color: '#faf8f3',
+      textAlign: 'center',
+      position: 'relative',
+      overflow: 'hidden'
+    },
+    ctaPattern: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      opacity: 0.05,
+      backgroundImage: 'radial-gradient(circle, #faf8f3 1px, transparent 1px)',
+      backgroundSize: '40px 40px'
+    },
+    ctaContent: {
+      position: 'relative',
+      zIndex: 1
     },
     ctaTitle: {
-      fontSize: 'clamp(2rem, 4vw, 3rem)',
-      fontWeight: '700',
-      marginBottom: '1.5rem'
+      fontSize: 'clamp(2.5rem, 4vw, 3.5rem)',
+      fontWeight: '800',
+      marginBottom: '1.5rem',
+      letterSpacing: '-1px'
     },
     ctaDescription: {
-      fontSize: '1.2rem',
+      fontSize: '1.3rem',
       marginBottom: '3rem',
-      opacity: 0.9,
-      maxWidth: '600px',
-      margin: '0 auto 3rem'
+      opacity: 0.95,
+      maxWidth: '700px',
+      margin: '0 auto 3rem',
+      lineHeight: '1.8'
     },
     ctaButtons: {
       display: 'flex',
-      gap: '1rem',
+      gap: '1.5rem',
       justifyContent: 'center',
       flexWrap: 'wrap'
     },
     ctaPrimary: {
-      padding: '1rem 2.5rem',
-      backgroundColor: '#667eea',
-      color: 'white',
+      padding: '1.2rem 3rem',
+      backgroundColor: '#faf8f3',
+      color: '#6b5b3d',
       textDecoration: 'none',
       borderRadius: '50px',
-      fontSize: '1.1rem',
-      fontWeight: '600',
-      transition: 'all 0.3s ease',
+      fontSize: '1.15rem',
+      fontWeight: '700',
+      transition: 'all 0.4s ease',
       cursor: 'pointer',
-      border: 'none'
+      border: 'none',
+      boxShadow: '0 8px 25px rgba(0, 0, 0, 0.3)',
+      letterSpacing: '0.3px'
     },
     ctaSecondary: {
-      padding: '1rem 2.5rem',
+      padding: '1.2rem 3rem',
       backgroundColor: 'transparent',
-      color: 'white',
+      color: '#faf8f3',
       textDecoration: 'none',
       borderRadius: '50px',
-      fontSize: '1.1rem',
-      fontWeight: '600',
-      border: '2px solid rgba(255, 255, 255, 0.3)',
-      transition: 'all 0.3s ease',
-      cursor: 'pointer'
+      fontSize: '1.15rem',
+      fontWeight: '700',
+      border: '2px solid rgba(250, 248, 243, 0.5)',
+      transition: 'all 0.4s ease',
+      cursor: 'pointer',
+      letterSpacing: '0.3px'
     },
     footer: {
       padding: '3rem 0',
-      backgroundColor: '#1f2937',
-      color: 'white',
+      backgroundColor: '#4a4035',
+      color: '#faf8f3',
       textAlign: 'center'
     },
     footerText: {
-      opacity: 0.7,
-      fontSize: '0.9rem'
+      opacity: 0.8,
+      fontSize: '1rem',
+      fontWeight: '500'
     },
     link: {
       textDecoration: 'none',
-      color: 'white',
+      color: 'inherit',
+      display: 'block'
     }
   };
 
@@ -377,7 +573,7 @@ const Homepage = () => {
     @keyframes slideInUp {
       from {
         opacity: 0;
-        transform: translateY(30px);
+        transform: translateY(40px);
       }
       to {
         opacity: 1;
@@ -386,20 +582,31 @@ const Homepage = () => {
     }
 
     @keyframes float {
-      from {
-        transform: translateX(-100%);
+      0%, 100% {
+        transform: translateY(0) translateX(0);
       }
-      to {
-        transform: translateX(100vw);
+      33% {
+        transform: translateY(-20px) translateX(10px);
+      }
+      66% {
+        transform: translateY(10px) translateX(-10px);
       }
     }
 
     @keyframes pulse {
       0%, 100% {
         opacity: 1;
+        transform: scale(1);
       }
       50% {
-        opacity: 0.5;
+        opacity: 0.8;
+        transform: scale(1.05);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .demo-container {
+        grid-template-columns: 1fr !important;
       }
     }
   `;
@@ -417,23 +624,40 @@ const Homepage = () => {
                 Transform Your Writing with AI
               </h1>
               <p style={styles.heroSubtitle}>
-                Professional text processing powered by advanced AI. Fix grammar, enhance vocabulary, adjust tone, and perfect your writing in seconds.
+                Professional text processing powered by advanced artificial intelligence. 
+                Fix grammar, enhance vocabulary, adjust tone, and perfect your writing in seconds.
               </p>
-              <button 
-                style={styles.ctaButton}
-                onMouseEnter={(e) => {
-                  e.target.style.backgroundColor = 'rgba(255, 255, 255, 0.3)';
-                  e.target.style.transform = 'translateY(-2px)';
-                }}
-                onMouseLeave={(e) => {
-                  e.target.style.backgroundColor = 'rgba(255, 255, 255, 0.2)';
-                  e.target.style.transform = 'translateY(0)';
-                }}
-              >
+              <div style={styles.ctaButtonGroup}>
                 <Link to="/text" style={styles.link}>
-                Try It Now
+                  <button 
+                    style={styles.ctaButton}
+                    onMouseEnter={(e) => {
+                      e.target.style.transform = 'translateY(-4px)';
+                      e.target.style.boxShadow = '0 12px 35px rgba(0, 0, 0, 0.3)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.target.style.transform = 'translateY(0)';
+                      e.target.style.boxShadow = '0 8px 25px rgba(0, 0, 0, 0.2)';
+                    }}
+                  >
+                    Try It Free
+                  </button>
                 </Link>
-              </button>
+                <button 
+                  style={styles.ctaButtonSecondary}
+                  onMouseEnter={(e) => {
+                    e.target.style.backgroundColor = 'rgba(250, 248, 243, 0.2)';
+                    e.target.style.borderColor = '#faf8f3';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.target.style.backgroundColor = 'transparent';
+                    e.target.style.borderColor = 'rgba(250, 248, 243, 0.5)';
+                  }}
+                  onClick={() => document.getElementById('features').scrollIntoView({ behavior: 'smooth' })}
+                >
+                  Learn More
+                </button>
+              </div>
             </div>
           </div>
         </section>
@@ -443,7 +667,7 @@ const Homepage = () => {
           <div style={styles.container}>
             <h2 style={styles.sectionTitle}>Powerful Writing Tools</h2>
             <p style={styles.sectionSubtitle}>
-              Everything you need to create perfect, professional text
+              Everything you need to create perfect, professional content with the power of AI
             </p>
             <div style={styles.featuresGrid}>
               {features.map((feature, index) => (
@@ -451,12 +675,23 @@ const Homepage = () => {
                   key={index}
                   style={{
                     ...styles.featureCard,
-                    transform: isVisible.features ? 'translateY(0)' : 'translateY(30px)',
+                    transform: isVisible.features ? 'translateY(0)' : 'translateY(40px)',
                     opacity: isVisible.features ? 1 : 0,
-                    transition: `all 0.6s ease ${index * 0.1}s`,
-                    borderTop: `4px solid ${feature.color}`
+                    transitionDelay: `${index * 0.1}s`
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = 'translateY(-8px)';
+                    e.currentTarget.style.boxShadow = '0 20px 50px rgba(107, 91, 61, 0.2)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'translateY(0)';
+                    e.currentTarget.style.boxShadow = '0 10px 40px rgba(107, 91, 61, 0.12)';
                   }}
                 >
+                  <div style={{
+                    ...styles.featureCardGlow,
+                    background: feature.gradient
+                  }}></div>
                   <span style={styles.featureIcon}>{feature.icon}</span>
                   <h3 style={styles.featureTitle}>{feature.title}</h3>
                   <p style={styles.featureDescription}>{feature.description}</p>
@@ -468,44 +703,107 @@ const Homepage = () => {
 
         {/* Demo Section */}
         <section id="demo" style={styles.demo}>
+          <div style={styles.demoPattern}></div>
           <div style={styles.container}>
-            <div style={styles.demoContainer}>
+            <div style={{...styles.demoContainer}} className="demo-container">
               <div style={styles.demoContent}>
                 <h2 style={styles.demoTitle}>See It In Action</h2>
                 <p style={styles.demoDescription}>
-                  Our AI-powered text processor analyzes your content and provides intelligent suggestions for improvement.
+                  Our AI-powered text processor analyzes your content in real-time and provides 
+                  intelligent, context-aware suggestions for improvement.
                 </p>
                 <ul style={styles.demoFeatures}>
                   <li style={styles.demoFeature}>
                     <span style={styles.demoFeatureIcon}>✓</span>
-                    Real-time text processing
+                    Lightning-fast real-time processing
                   </li>
                   <li style={styles.demoFeature}>
                     <span style={styles.demoFeatureIcon}>✓</span>
-                    Multiple processing modes
+                    13+ intelligent processing modes
                   </li>
                   <li style={styles.demoFeature}>
                     <span style={styles.demoFeatureIcon}>✓</span>
-                    Instant results
+                    Professional-grade results instantly
                   </li>
                   <li style={styles.demoFeature}>
                     <span style={styles.demoFeatureIcon}>✓</span>
-                    Professional quality output
+                    Context-aware AI suggestions
                   </li>
                 </ul>
               </div>
               <div style={styles.demoVisual}>
                 <div style={styles.demoBox}>
-                  <div style={styles.demoText}>
-                    <strong>Current Mode:</strong> {features[currentFeature].title}
+                  <div style={styles.demoBoxHeader}>
+                    CURRENTLY ACTIVE
                   </div>
                   <div style={styles.demoText}>
-                    {features[currentFeature].description}
+                    <strong>{features[currentFeatureIndex].title}</strong>
                   </div>
-                  <button style={styles.demoButton}>
-                    Process Text
+                  <div style={{...styles.demoText, fontSize: '1.1rem', fontWeight: '400', opacity: 0.9}}>
+                    {features[currentFeatureIndex].description}
+                  </div>
+                  <button 
+                    style={styles.demoButton}
+                    onMouseEnter={(e) => {
+                      e.target.style.transform = 'scale(1.03)';
+                      e.target.style.boxShadow = '0 8px 20px rgba(0, 0, 0, 0.2)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.target.style.transform = 'scale(1)';
+                      e.target.style.boxShadow = 'none';
+                    }}
+                  >
+                    <Link to="/text" style={{...styles.link, color: '#6b5b3d'}}>
+                      Try This Mode →
+                    </Link>
                   </button>
                 </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+
+        {/* CTA Section */}
+        <section style={styles.cta}>
+          <div style={styles.ctaPattern}></div>
+          <div style={styles.ctaContent}>
+            <div style={styles.container}>
+              <h2 style={styles.ctaTitle}>Ready to Transform Your Writing?</h2>
+              <p style={styles.ctaDescription}>
+                Start creating professional, polished content today with our AI-powered writing assistant. 
+                It's free to try, no credit card required.
+              </p>
+              <div style={styles.ctaButtons}>
+                <Link to="/text" style={styles.link}>
+                  <button 
+                    style={styles.ctaPrimary}
+                    onMouseEnter={(e) => {
+                      e.target.style.transform = 'translateY(-4px)';
+                      e.target.style.boxShadow = '0 12px 35px rgba(0, 0, 0, 0.4)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.target.style.transform = 'translateY(0)';
+                      e.target.style.boxShadow = '0 8px 25px rgba(0, 0, 0, 0.3)';
+                    }}
+                  >
+                    Get Started Free
+                  </button>
+                </Link>
+                <button 
+                  style={styles.ctaSecondary}
+                  onMouseEnter={(e) => {
+                    e.target.style.backgroundColor = 'rgba(250, 248, 243, 0.2)';
+                    e.target.style.borderColor = '#faf8f3';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.target.style.backgroundColor = 'transparent';
+                    e.target.style.borderColor = 'rgba(250, 248, 243, 0.5)';
+                  }}
+                  onClick={() => document.getElementById('features').scrollIntoView({ behavior: 'smooth' })}
+                >
+                  View All Features
+                </button>
               </div>
             </div>
           </div>
@@ -515,7 +813,7 @@ const Homepage = () => {
         <footer style={styles.footer}>
           <div style={styles.container}>
             <p style={styles.footerText}>
-              © 2025 Text Processor. Built with care.
+              © 2025 AI Writing Assistant • Built with ❤️ for writers everywhere
             </p>
           </div>
         </footer>
