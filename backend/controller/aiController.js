@@ -2,12 +2,14 @@ const axios = require("axios");
 require("dotenv").config();
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+const GEMINI_URL =
+  "https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent";
 
 exports.processText = async (req, res) => {
-  const { 
-    text, 
-    mode, 
-    tone = "default", 
+  const {
+    text,
+    mode,
+    tone = "default",
     goalType,
     language = "en",
     targetAudience = "general",
@@ -20,8 +22,19 @@ exports.processText = async (req, res) => {
     });
   }
 
+  if (!GEMINI_API_KEY) {
+    return res.status(500).json({
+      error: "GEMINI_API_KEY missing on server"
+    });
+  }
+
+  console.log("🧠 /spell/process", {
+    mode,
+    textLength: text.length
+  });
+
   try {
-    const prompt = buildAdvancedPrompt(text, mode, {
+    const prompt = buildPrompt(text, mode, {
       tone,
       goalType,
       language,
@@ -29,37 +42,70 @@ exports.processText = async (req, res) => {
       formality
     });
 
-    const GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent";
-
     const response = await axios.post(
       `${GEMINI_URL}?key=${GEMINI_API_KEY}`,
       {
         contents: [{ parts: [{ text: prompt }] }],
         generationConfig: {
-          temperature: mode === "creative" ? 0.9 : 0.7,
-          maxOutputTokens: 2048,
+          temperature: 0.7,
+          maxOutputTokens: 1024
         }
       },
       {
-        headers: { "Content-Type": "application/json" }
+        headers: { "Content-Type": "application/json" },
+        timeout: 20000
       }
     );
 
-    const aiReply = response.data?.candidates?.[0]?.content?.parts?.[0]?.text;
+    const candidates = response.data?.candidates;
+
+    if (!candidates || candidates.length === 0) {
+      console.warn("⚠️ Gemini returned empty candidates");
+      return res.json({
+        original: text,
+        result: "AI could not generate a response for this input.",
+        mode,
+        metadata: {
+          originalLength: text.length,
+          resultLength: 0,
+          language
+        }
+      });
+    }
+
+    const aiReply = candidates[0]?.content?.parts?.[0]?.text;
+
+    if (!aiReply) {
+      console.warn("⚠️ Gemini response had no text");
+      return res.json({
+        original: text,
+        result: "AI response was blocked or empty.",
+        mode,
+        metadata: {
+          originalLength: text.length,
+          resultLength: 0,
+          language
+        }
+      });
+    }
 
     res.json({
       original: text,
-      result: aiReply || "No response from AI",
-      mode: mode,
+      result: aiReply.trim(),
+      mode,
       metadata: {
         originalLength: text.length,
-        resultLength: aiReply?.length || 0,
-        language: language
+        resultLength: aiReply.length,
+        language
       }
     });
 
   } catch (error) {
-    console.error("Gemini error:", error.response?.data || error.message);
+    console.error(
+      "❌ Gemini API error:",
+      error.response?.data || error.message
+    );
+
     res.status(500).json({
       error: "AI processing failed",
       details: error.response?.data || error.message
@@ -67,130 +113,125 @@ exports.processText = async (req, res) => {
   }
 };
 
-function buildAdvancedPrompt(text, mode, options) {
+function buildPrompt(text, mode, options) {
   const { tone, goalType, language, targetAudience, formality } = options;
-  
+
   const langMap = {
-    "en": "English",
-    "hi": "Hindi", 
-    "es": "Spanish",
-    "fr": "French",
-    "jp": "Japanese"
+    en: "English",
+    hi: "Hindi",
+    es: "Spanish",
+    fr: "French"
   };
-  
+
   const lang = langMap[language] || "English";
 
   switch (mode) {
     case "spell":
-      return `Correct spelling mistakes in this ${lang} text and provide a detailed report:
+      return `Correct spelling mistakes in this ${lang} text.
+Return ONLY the corrected text.
 
-Text: "${text}"
-
-Provide response in this format:
-1. Corrected Text: [full corrected version]
-2. Errors Found: [list each error with correction]
-3. Confidence: [high/medium/low for each correction]`;
+Text:
+${text}`;
 
     case "grammar":
-      return `Fix grammar issues and explain what was wrong:
+      return `Fix grammar issues in this ${lang} text.
+Return ONLY the corrected text.
 
-Text: "${text}"
-
-Provide:
-1. Corrected text
-2. Grammar rules violated
-3. Explanations for each fix`;
+Text:
+${text}`;
 
     case "rephrase":
-      return `Rephrase for a ${targetAudience} audience with ${formality} formality:\n\n"${text}"`;
+      return `Rephrase this for a ${targetAudience} audience with ${formality} formality:
+
+${text}`;
 
     case "tone":
-      return `Rewrite in ${tone} tone for ${targetAudience} audience:\n\n"${text}"`;
+      return `Rewrite this in a ${tone} tone for ${targetAudience} audience:
+
+${text}`;
 
     case "vocabulary":
-      return `Enhance vocabulary while maintaining ${formality} formality:\n\n"${text}"`;
+      return `Improve vocabulary while keeping meaning same:
+
+${text}`;
 
     case "expand":
-      return `Expand this with more details and context (target 2x length):\n\n"${text}"`;
+      return `Expand this text with more detail:
+
+${text}`;
 
     case "compress":
-      return `Make this more concise (target 50% of original):\n\n"${text}"`;
+      return `Make this text concise:
+
+${text}`;
 
     case "analyze":
-      return `Analyze this text comprehensively:
-- Readability score
-- Tone and formality level
-- Strengths and weaknesses
-- Improvement suggestions
-- Target audience fit
+      return `Analyze the following text and give suggestions:
 
-Text: "${text}"`;
+${text}`;
 
     case "seo":
       return `SEO optimize this content:
-- Keyword density analysis
-- Meta description (150-160 chars)
-- Title suggestions
-- Readability improvements
 
-Content: "${text}"`;
+${text}`;
 
     case "translate":
-      return `Translate this to ${lang} maintaining tone and context:\n\n"${text}"`;
+      return `Translate this text to ${lang}:
+
+${text}`;
 
     case "summarize":
-      return `Create a concise summary (3-5 sentences) of:\n\n"${text}"`;
+      return `Summarize this text:
+
+${text}`;
 
     case "bullets":
-      return `Convert this text into clear bullet points:\n\n"${text}"`;
+      return `Convert this text into bullet points:
+
+${text}`;
 
     case "goal":
       return buildGoalPrompt(goalType, text, tone, targetAudience);
 
     default:
-      return `Improve the overall quality of this writing:\n\n"${text}"`;
+      return `Improve this text:
+
+${text}`;
   }
 }
 
 function buildGoalPrompt(goal, topic, tone, targetAudience) {
   switch (goal) {
     case "email":
-      return `Write a ${tone} email for ${targetAudience}:
-Topic: "${topic}"
-Include: subject line, greeting, body, signature`;
+      return `Write a ${tone} email for ${targetAudience} about:
+${topic}`;
 
     case "essay":
-      return `Write a ${tone} essay for ${targetAudience}:
-Topic: "${topic}"
-Structure: intro, 3 body paragraphs, conclusion
-Length: 500-700 words`;
+      return `Write a ${tone} essay for ${targetAudience} on:
+${topic}`;
 
     case "story":
-      return `Write a ${tone} story for ${targetAudience}:
-Theme: "${topic}"
-Include: setting, characters, conflict, resolution`;
+      return `Write a ${tone} story for ${targetAudience} about:
+${topic}`;
 
     case "blog":
-      return `Write a ${tone} blog post for ${targetAudience}:
-Topic: "${topic}"
-Include: catchy title, intro, main points, conclusion, CTA`;
+      return `Write a ${tone} blog post for ${targetAudience} on:
+${topic}`;
 
     case "social":
-      return `Create social media posts (Twitter, LinkedIn, Instagram) about:
-"${topic}"
-Tone: ${tone}
-Audience: ${targetAudience}`;
+      return `Create social media content about:
+${topic}`;
 
     case "resume":
-      return `Create resume content for ${targetAudience}:
-"${topic}"
-Format: professional bullet points, ${tone} tone`;
+      return `Create resume content about:
+${topic}`;
 
     case "cover_letter":
-      return `Write a ${tone} cover letter for ${targetAudience}:
-Position/Topic: "${topic}"`;
+      return `Write a ${tone} cover letter about:
+${topic}`;
 
     default:
-      return `Generate ${tone} content for ${targetAudience} about:\n"${topic}"`;
+      return `Generate ${tone} content for ${targetAudience} about:
+${topic}`;
   }
 }
