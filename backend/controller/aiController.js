@@ -29,7 +29,7 @@ exports.processText = async (req, res) => {
       formality
     });
 
-    const GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent";
+    const GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent";
 
     const response = await axios.post(
       `${GEMINI_URL}?key=${GEMINI_API_KEY}`,
