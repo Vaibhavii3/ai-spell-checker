@@ -344,7 +344,7 @@ const TextProcessor = () => {
 
     try {
       const res = await axios.post(
-        `${process.env.REACT_APP_API_URL}/spell/process`,
+        `${process.env.REACT_APP_API_URL}/api/v1/spell/process`,
         {
           text: text.trim(),
           mode,
