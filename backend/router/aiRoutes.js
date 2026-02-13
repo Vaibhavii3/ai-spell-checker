@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { processText } = require('../controller/aiController.js');
+const { processText } = require('../controllers/aiController.js');
 
 router.post('/process', processText);
 
